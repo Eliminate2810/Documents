@@ -1,0 +1,50 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy
+from scipy import signal 
+plt.rcParams['font.sans-serif']=['SimHei'] #加上这一句就能在图表中显示中文
+plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
+#x(n)=2cos (a×0.1πn)u(n)+ 2cos (0.4πn)u(n)
+
+wp=0.2*np.pi
+ws=0.3*np.pi
+Rp=1
+As=15
+fs=10*10e3
+
+#design digtal butter
+N, wc = scipy.signal.buttord(wp/np.pi, ws/np.pi, Rp, As, analog=False, fs=fs)
+b1, a1 = scipy.signal.butter(N, wc, btype='low', analog= False, output='ba', fs=fs)
+ws, h = signal.freqz(b1,a1,whole= False)
+
+#generate a signal
+a=9
+def u(n):
+    u = np.where(n >= 0, 1, 0)
+    return u
+n=np.arange(512)
+xn=2*np.cos (a*0.1*np.pi*n)*u(n)+ 2*np.cos (0.4*np.pi*n)*u(n)
+Xk=np.fft.fft(xn)
+yn=np.fft.ifft(Xk*h)
+
+#plot fileter
+plt.semilogx(ws, abs(h))
+plt.title('Butterworth 数字低通滤波器')
+plt.xlabel('Frequency [rad]')
+plt.ylabel('Amplitude ')
+plt.margins(0, 0.1)
+plt.grid(which='both', axis='both')
+
+#plot x and y
+i=np.arange(100)
+x=xn[0:100]
+y=yn[0:100]
+plt.figure(2)
+plt.subplot(211)
+plt.plot(i,x)
+plt.title('x(n) and y(n)')
+plt.grid()
+plt.subplot(212)
+plt.plot(i,y)
+plt.grid()
+plt.show()

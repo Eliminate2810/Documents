@@ -46,7 +46,7 @@ if __name__ == "__main__":
     window = tk.Tk()
     
     # 第2步，给窗口的可视化起名字
-    window.title('My Window')
+    window.title('Window')
     
     # 第3步，设定窗口的大小(长 * 宽)
     window.geometry('500x300')  # 这里的乘是小x
@@ -69,8 +69,6 @@ if __name__ == "__main__":
     b2.pack(padx=0, pady=num)
     b3.pack(padx=0, pady=num)
     b4.pack(padx=0, pady=num)
-
-
 
     # 第6步，主窗口循环显示
     window.mainloop()
